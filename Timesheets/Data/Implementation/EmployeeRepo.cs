@@ -1,35 +1,43 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Timesheets.Data.Interfaces;
 using Timesheets.Models;
 
 namespace Timesheets.Data.Implementation
 {
-    public class EmployeeRepo:IEmployeeRepo
+    public class EmployeeRepo : IEmployeeRepo
     {
-        public Employee GetItem(Guid id)
+        private readonly TimesheetDbContext _context;
+
+        public EmployeeRepo(TimesheetDbContext context)
         {
-            throw new NotImplementedException();
+            _context = context;
         }
 
-        public IEnumerable<Employee> GetItems()
+        public async Task Add(Employee item)
         {
-            throw new NotImplementedException();
+            await _context.Employees.AddAsync(item);
+            await _context.SaveChangesAsync();
         }
 
-        public void Add(Employee item)
+        public async Task<Employee> GetItem(Guid id)
         {
-            throw new NotImplementedException();
+            var result = await _context.Employees.FindAsync(id);
+            return result;
         }
 
-        public void Add()
+        public async Task<IEnumerable<Employee>> GetItems()
         {
-            throw new NotImplementedException();
+            var result = await _context.Employees.ToListAsync();
+            return result;
         }
 
-        public void Update()
+        public async Task Update(Employee item)
         {
-            throw new NotImplementedException();
+            _context.Employees.Update(item);
+            await _context.SaveChangesAsync();
         }
     }
 }

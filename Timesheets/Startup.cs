@@ -6,15 +6,18 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Timesheets.Data;
 using Timesheets.Data.Implementation;
 using Timesheets.Data.Interfaces;
 using Timesheets.Domain.Implementation;
 using Timesheets.Domain.Interfaces;
+using Timesheets.Infrastructure;
 
 namespace Timesheets
 {
@@ -30,10 +33,18 @@ namespace Timesheets
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.ConfigureDbContext(Configuration);
+            
+            services.AddScoped<IUserRepo, UserRepo>();
             services.AddScoped<ISheetRepo, SheetRepo>();
+            services.AddScoped<IContractRepo, ContractRepo>();
+            services.AddScoped<IEmployeeRepo, EmployeeRepo>();
+
+            services.AddScoped<IUserManager, UserManager>();
             services.AddScoped<ISheetManager, SheetManager>();
-            
-            
+            services.AddScoped<IContractManager, ContractManager>();
+            services.AddScoped<IEmployeeManager, EmployeeManager>();
+
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
