@@ -37,7 +37,19 @@ namespace Timesheets.Data.Implementation
 
         public async Task Update(Sheet item)
         {
-            _context.Sheets.Update(item);
+            
+            var result = await _context.Sheets.FindAsync(item.Id);
+            result.Amount = item.Amount;
+            result.Contract = item.Contract;
+            result.ContractId = item.ContractId;
+            result.Date = item.Date;
+            result.Employee = item.Employee;
+            result.EmployeeId = item.EmployeeId;
+            result.Invoice = item.Invoice;
+            result.InvoiceId = item.InvoiceId;
+            result.Service = item.Service;
+            result.ServiceId = item.ServiceId;
+            _context.Sheets.Update(result);
             await _context.SaveChangesAsync();
         }
     }

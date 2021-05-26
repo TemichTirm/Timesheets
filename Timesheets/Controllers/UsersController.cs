@@ -36,12 +36,7 @@ namespace Timesheets.Controllers
         /// <summary> Создает нового пользователя </summary>
         [HttpPost]
         public async Task<IActionResult> Create([FromQuery] string userName)
-        {
-            var isUserNameExist = await _userManager.CheckUserExist(userName);
-            if (isUserNameExist)
-            {
-                return BadRequest($"User with userName {userName} already exists. Plese choose another one.");
-            }
+        {            
             var id = await _userManager.Create(userName);
             return Ok(id);
         }
@@ -50,7 +45,7 @@ namespace Timesheets.Controllers
         [HttpPut]
         public async Task<IActionResult> Update([FromQuery] Guid id, [FromQuery] string userName)
         {
-            var isUserNameExist = await _userManager.CheckUserExist(userName, id);
+            var isUserNameExist = await _userManager.CheckUserExist(id);
             if (!isUserNameExist)
             {
                 return BadRequest($"User with id {id} does not exists. It couldn't been updated.");

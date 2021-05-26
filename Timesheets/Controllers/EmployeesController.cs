@@ -18,7 +18,7 @@ namespace Timesheets.Controllers
         }
 
         /// <summary> Возвращает информацию о сотруднике </summary>
-        [HttpGet("{id}")]
+        [HttpGet("ById")]
         public async Task<IActionResult> GetItem([FromQuery] Guid id)
         {
             var result = await _employeeManager.GetItem(id);
@@ -36,14 +36,21 @@ namespace Timesheets.Controllers
         /// <summary> Создает нового сотрудника </summary>
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] EmployeeRequest employeeRequest)
-        {           
+        {
             var id = await _employeeManager.Create(employeeRequest);
-            return Ok(id);
+            if (id != null)
+            {
+                return Ok(id);
+            }
+            else
+            {
+                return BadRequest($"UserId {employeeRequest.UserId} already connected with another Employee, or User with such Id doesn't exists");
+            }
         }
 
         /// <summary> Обновляет данные сотрудника </summary>
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] EmployeeRequest employeeRequest)
+        [HttpPut]
+        public async Task<IActionResult> Update([FromQuery] Guid id, [FromBody] EmployeeRequest employeeRequest)
         {
             var isEmployeeExist = await _employeeManager.CheckEmployeeExist(id);
             if (!isEmployeeExist)

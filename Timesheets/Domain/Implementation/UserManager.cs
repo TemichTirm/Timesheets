@@ -45,9 +45,9 @@ namespace Timesheets.Domain.Implementation
             };
             await _userRepo.Update(user);
         }
-        public async Task<bool> CheckUserExist(string userName, Guid? id = null)
+        public async Task<bool> CheckUserExist(Guid id)
         {
-            return await _userRepo.CheckUserExist(userName, id);
+            return await _userRepo.GetItem(id) != null;
         }
     }
 }

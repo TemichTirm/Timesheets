@@ -11,7 +11,7 @@ namespace Timesheets.Domain.Interfaces
     {
         Task<Employee> GetItem(Guid id);
         Task<IEnumerable<Employee>> GetItems();
-        Task<Guid> Create(EmployeeRequest employeeRequest);
+        Task<Guid?> Create(EmployeeRequest employeeRequest);
         Task Update(Guid id, EmployeeRequest employeeRequest);
         Task<bool> CheckEmployeeExist(Guid id);
     }

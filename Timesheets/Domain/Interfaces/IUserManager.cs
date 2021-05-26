@@ -11,6 +11,6 @@ namespace Timesheets.Domain.Interfaces
         Task<IEnumerable<User>> GetItems();
         Task<Guid> Create(string userName);
         Task Update(Guid id, string userName);
-        Task<bool> CheckUserExist(string userName, Guid? id = null);
+        Task<bool> CheckUserExist(Guid id);
     }
 }

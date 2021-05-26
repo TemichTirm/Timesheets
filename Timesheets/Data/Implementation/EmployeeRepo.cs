@@ -35,8 +35,14 @@ namespace Timesheets.Data.Implementation
         }
 
         public async Task Update(Employee item)
-        {
-            _context.Employees.Update(item);
+        {            
+            var result = await _context.Employees.FindAsync(item.Id);
+            result.IsDeleted = item.IsDeleted;
+            result.Name = item.Name;
+            result.Sheets = item.Sheets;
+            result.User = item.User;
+            result.UserId = item.UserId;
+            _context.Employees.Update(result);
             await _context.SaveChangesAsync();
         }
     }
