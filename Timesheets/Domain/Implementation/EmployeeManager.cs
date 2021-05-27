@@ -19,6 +19,7 @@ namespace Timesheets.Domain.Implementation
         }
         public async Task<Guid?> Create(EmployeeRequest employeeRequest)
         {
+            // Проверка есть ли User с таким Id
             var isUserExist = await _userRepo.CheckUserExist(null, employeeRequest.UserId);
             if (!isUserExist)
             {
@@ -26,6 +27,7 @@ namespace Timesheets.Domain.Implementation
             }
             else 
             {
+                // Проверка сопоставлен ли такой UserId с другим сотрудником
                 var employees = await _employeeRepo.GetItems();
                 foreach (var employee in employees)
                 {
