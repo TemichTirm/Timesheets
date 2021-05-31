@@ -171,6 +171,14 @@ namespace Timesheets.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("Id");
 
+                    b.Property<byte[]>("PasswordHash")
+                        .HasColumnType("bytea")
+                        .HasColumnName("Password");
+
+                    b.Property<string>("Role")
+                        .HasColumnType("text")
+                        .HasColumnName("Role");
+
                     b.Property<string>("Username")
                         .HasColumnType("text")
                         .HasColumnName("Username");

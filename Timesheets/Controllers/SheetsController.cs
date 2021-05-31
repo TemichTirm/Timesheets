@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Timesheets.Domain.Interfaces;
 using Timesheets.Models;
@@ -7,6 +8,7 @@ using Timesheets.Models.Dto;
 
 namespace Timesheets.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class SheetsController: ControllerBase
@@ -29,6 +31,7 @@ namespace Timesheets.Controllers
         }
         
         /// <summary> Возвращает все записи табеля </summary>
+        [Authorize(Roles = "user")]
         [HttpGet]
         public async Task<IActionResult> GetItems()
         {

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Timesheets.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class InitialStart : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -53,7 +53,9 @@ namespace Timesheets.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Username = table.Column<string>(type: "text", nullable: true)
+                    Username = table.Column<string>(type: "text", nullable: true),
+                    Password = table.Column<byte[]>(type: "bytea", nullable: true),
+                    Role = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
