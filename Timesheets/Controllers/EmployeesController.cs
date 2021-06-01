@@ -35,7 +35,7 @@ namespace Timesheets.Controllers
 
         /// <summary> Создает нового сотрудника </summary>
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] EmployeeRequest employeeRequest)
+        public async Task<IActionResult> Create([FromBody] EmployeeCreateRequest employeeRequest)
         {
             var id = await _employeeManager.Create(employeeRequest);
             if (id != null)
@@ -50,7 +50,7 @@ namespace Timesheets.Controllers
 
         /// <summary> Обновляет данные сотрудника </summary>
         [HttpPut]
-        public async Task<IActionResult> Update([FromQuery] Guid id, [FromBody] EmployeeRequest employeeRequest)
+        public async Task<IActionResult> Update([FromQuery] Guid id, [FromBody] EmployeeCreateRequest employeeRequest)
         {
             var isEmployeeExist = await _employeeManager.CheckEmployeeExist(id);
             if (!isEmployeeExist)

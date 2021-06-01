@@ -17,7 +17,7 @@ namespace Timesheets.Domain.Implementation
             _employeeRepo = employeeRepo;
             _userRepo = userRepo;
         }
-        public async Task<Guid?> Create(EmployeeRequest employeeRequest)
+        public async Task<Guid?> Create(EmployeeCreateRequest employeeRequest)
         {
             // Проверка есть ли User с таким Id
             var isUserExist = await _userRepo.CheckUserExist(null, employeeRequest.UserId);
@@ -58,7 +58,7 @@ namespace Timesheets.Domain.Implementation
             return await _employeeRepo.GetItems();
         }
 
-        public async Task Update(Guid id, EmployeeRequest employeeRequest)
+        public async Task Update(Guid id, EmployeeCreateRequest employeeRequest)
         {
             var employee = new Employee
             {

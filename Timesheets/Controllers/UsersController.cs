@@ -40,7 +40,7 @@ namespace Timesheets.Controllers
 
         /// <summary> Создает нового пользователя </summary>
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] UserRequest user)
+        public async Task<IActionResult> Create([FromBody] UserCreateRequest user)
         {
             
             var id = await _userManager.Create(user);
@@ -52,7 +52,7 @@ namespace Timesheets.Controllers
             return Ok(id);
         }
 
-        /// <summary> Обновляет имя пользователя </summary>
+        /// <summary> Обновляет данные пользователя </summary>
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] User user)
         {

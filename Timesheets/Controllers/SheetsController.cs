@@ -31,7 +31,7 @@ namespace Timesheets.Controllers
         }
         
         /// <summary> Возвращает все записи табеля </summary>
-        [Authorize(Roles = "user")]
+        [Authorize(Roles = "user, admin")]
         [HttpGet]
         public async Task<IActionResult> GetItems()
         {
@@ -41,7 +41,7 @@ namespace Timesheets.Controllers
 
         /// <summary> Создает новую запись табеля </summary>
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] SheetRequest sheet)
+        public async Task<IActionResult> Create([FromBody] SheetCreateRequest sheet)
         {
             var isAllowedToCreate = await _contractManager.CheckContractIsActive(sheet.ContractId);
 
@@ -56,7 +56,7 @@ namespace Timesheets.Controllers
 
         /// <summary> Обновляет запись табеля </summary>
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] SheetRequest sheet)
+        public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] SheetCreateRequest sheet)
         {
             var isAllowedToCreate = await _contractManager.CheckContractIsActive(sheet.ContractId);
 

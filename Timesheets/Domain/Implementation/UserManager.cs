@@ -17,7 +17,7 @@ namespace Timesheets.Domain.Implementation
         {
             _userRepo = userRepo;
         }
-        public async Task<Guid?> Create(UserRequest request)
+        public async Task<Guid?> Create(UserCreateRequest request)
         {
             // Проверка, используется ли уже имя пользователя.
             if (await _userRepo.CheckUserExist(request.Username))

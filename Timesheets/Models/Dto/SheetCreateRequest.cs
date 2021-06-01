@@ -2,7 +2,7 @@
 
 namespace Timesheets.Models.Dto
 {
-    public class SheetRequest
+    public class SheetCreateRequest
     {
         public DateTime Date { get; set; }
         public Guid EmployeeId { get; set; }

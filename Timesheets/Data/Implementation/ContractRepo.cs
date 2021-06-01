@@ -8,16 +8,17 @@ namespace Timesheets.Data.Implementation
 {
     public class ContractRepo:IContractRepo
     {
-        private readonly TimesheetDbContext _dbContext;
+        private readonly TimesheetDbContext _context;
 
-        public ContractRepo(TimesheetDbContext dbContext)
+        public ContractRepo(TimesheetDbContext context)
         {
-            _dbContext = dbContext;
+            _context = context;
         }
 
-        public Task<Contract> GetItem(Guid id)
+        public async Task<Contract> GetItem(Guid id)
         {
-            throw new NotImplementedException();
+            var result = await _context.Contracts.FindAsync(id);
+            return result;
         }
 
         public Task<IEnumerable<Contract>> GetItems()
@@ -32,13 +33,13 @@ namespace Timesheets.Data.Implementation
 
         public async Task Update(Contract item)
         {
-            _dbContext.Contracts.Update(item);
-            await _dbContext.SaveChangesAsync();
+            _context.Contracts.Update(item);
+            await _context.SaveChangesAsync();
         }        
 
         public async Task<bool?> CheckContractIsActive(Guid id)
         {
-            var contract = await _dbContext.Contracts.FindAsync(id);
+            var contract = await _context.Contracts.FindAsync(id);
             var now = DateTime.Now;
             var isActive = now <= contract?.DateEnd && now >= contract?.DateStart;
 
