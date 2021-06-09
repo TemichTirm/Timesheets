@@ -42,14 +42,14 @@ namespace Timesheets.Domain.Implementation
             return newContract.Id;
         }
 
-        public Task<Contract> GetItem(Guid id)
+        public async Task<Contract> GetItem(Guid id)
         {
-            throw new NotImplementedException();
+            return await _contractRepo.GetItem(id);
         }
 
-        public Task<IEnumerable<Contract>> GetItems()
+        public async Task<IEnumerable<Contract>> GetItems()
         {
-            throw new NotImplementedException();
+            return await _contractRepo.GetItems();
         }
 
         public Task Update(Contract contract)

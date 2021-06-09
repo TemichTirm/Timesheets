@@ -7,8 +7,8 @@ namespace Timesheets.Infrastructure.Constants
 {
     public static class UserRoleConstants
     {
-        public static string Manager = "manager";
-        public static string User = "user";
-        public static string Client = "client";
+        public const string Manager = "manager";
+        public const string User = "user";
+        public const string Client = "client";
     }
 }

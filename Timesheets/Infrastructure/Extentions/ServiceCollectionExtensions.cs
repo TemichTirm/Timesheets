@@ -28,8 +28,12 @@ namespace Timesheets.Infrastructure.Extentions
         public static void ConfigureAuthentication (this IServiceCollection services, IConfiguration configuration)
         {
             services.Configure<JwtAccessOptions>(configuration.GetSection("Authentication:JwtAccessOptions"));
-            var jwtSettings = new JwtOptions();
-            configuration.Bind("Authentication:JwtAccessOptions", jwtSettings);
+            var jwtAccessSettings = new JwtOptions();
+            configuration.Bind("Authentication:JwtAccessOptions", jwtAccessSettings);
+
+            services.Configure<JwtRefreshOptions>(configuration.GetSection("Authentication:JwtRefreshOptions"));
+            var jwtRefreshSettings = new JwtOptions();
+            configuration.Bind("Authentication:JwtRefreshOptions", jwtRefreshSettings);
 
             services.AddTransient<ILoginManager, LoginManager>();
             services.AddAuthentication(x =>
@@ -38,7 +42,7 @@ namespace Timesheets.Infrastructure.Extentions
                 x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             }).AddJwtBearer(options =>
             {
-                options.TokenValidationParameters = jwtSettings.GetTokenValidationParameters();
+                options.TokenValidationParameters = jwtAccessSettings.GetTokenValidationParameters();
             });
 
         }
@@ -56,6 +60,7 @@ namespace Timesheets.Infrastructure.Extentions
             services.AddScoped<ISheetRepo, SheetRepo>();
             services.AddScoped<IContractRepo, ContractRepo>();
             services.AddScoped<IEmployeeRepo, EmployeeRepo>();
+            services.AddScoped<ITokenRepo, TokenRepo>();
         }
         public static void ConfigureSwagger(this IServiceCollection services)
         {
