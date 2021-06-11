@@ -25,7 +25,7 @@ namespace Timesheets.Infrastructure.Extentions
                     b => b.MigrationsAssembly("Timesheets"));
             });
         }
-        public static void ConfigureAuthentication (this IServiceCollection services, IConfiguration configuration)
+        public static void ConfigureAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
             services.Configure<JwtAccessOptions>(configuration.GetSection("Authentication:JwtAccessOptions"));
             var jwtAccessSettings = new JwtOptions();
@@ -62,6 +62,7 @@ namespace Timesheets.Infrastructure.Extentions
             services.AddScoped<IEmployeeRepo, EmployeeRepo>();
             services.AddScoped<ITokenRepo, TokenRepo>();
         }
+
         public static void ConfigureSwagger(this IServiceCollection services)
         {
             services.AddSwaggerGen(c =>

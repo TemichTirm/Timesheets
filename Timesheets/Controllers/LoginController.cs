@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Timesheets.Domain.Interfaces;
-using Timesheets.Models;
 using Timesheets.Models.Dto;
 
 namespace Timesheets.Controllers
