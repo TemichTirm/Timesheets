@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Timesheets.Data.Interfaces;
 using Timesheets.Models;
 
@@ -7,29 +8,42 @@ namespace Timesheets.Data.Implementation
 {
     public class ContractRepo:IContractRepo
     {
-        public Contract GetItem(Guid id)
+        private readonly TimesheetDbContext _context;
+
+        public ContractRepo(TimesheetDbContext context)
+        {
+            _context = context;
+        }
+
+        public async Task<Contract> GetItem(Guid id)
+        {
+            var result = await _context.Contracts.FindAsync(id);
+            return result;
+        }
+
+        public Task<IEnumerable<Contract>> GetItems()
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<Contract> GetItems()
+        public Task Add(Contract item)
         {
             throw new NotImplementedException();
         }
 
-        public void Add(Contract item)
+        public async Task Update(Contract item)
         {
-            throw new NotImplementedException();
-        }
+            _context.Contracts.Update(item);
+            await _context.SaveChangesAsync();
+        }        
 
-        public void Add()
+        public async Task<bool?> CheckContractIsActive(Guid id)
         {
-            throw new NotImplementedException();
-        }
+            var contract = await _context.Contracts.FindAsync(id);
+            var now = DateTime.Now;
+            var isActive = now <= contract?.DateEnd && now >= contract?.DateStart;
 
-        public void Update()
-        {
-            throw new NotImplementedException();
+            return isActive;
         }
     }
 }

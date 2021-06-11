@@ -1,35 +1,49 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Timesheets.Data.Interfaces;
 using Timesheets.Models;
 
 namespace Timesheets.Data.Implementation
 {
-    public class EmployeeRepo:IEmployeeRepo
+    public class EmployeeRepo : IEmployeeRepo
     {
-        public Employee GetItem(Guid id)
+        private readonly TimesheetDbContext _context;
+
+        public EmployeeRepo(TimesheetDbContext context)
         {
-            throw new NotImplementedException();
+            _context = context;
         }
 
-        public IEnumerable<Employee> GetItems()
+        public async Task Add(Employee item)
         {
-            throw new NotImplementedException();
+            await _context.Employees.AddAsync(item);
+            await _context.SaveChangesAsync();
         }
 
-        public void Add(Employee item)
+        public async Task<Employee> GetItem(Guid id)
         {
-            throw new NotImplementedException();
+            var result = await _context.Employees.FindAsync(id);
+            return result;
         }
 
-        public void Add()
+        public async Task<IEnumerable<Employee>> GetItems()
         {
-            throw new NotImplementedException();
+            var result = await _context.Employees.ToListAsync();
+            return result;
         }
 
-        public void Update()
-        {
-            throw new NotImplementedException();
+        public async Task Update(Employee item)
+        {            
+            var result = await _context.Employees.FindAsync(item.Id);
+            result.IsDeleted = item.IsDeleted;
+            result.Name = item.Name;
+            result.Sheets = item.Sheets;
+            result.User = item.User;
+            result.UserId = item.UserId;
+            _context.Employees.Update(result);
+            await _context.SaveChangesAsync();
         }
     }
 }
