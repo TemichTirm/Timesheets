@@ -7,9 +7,7 @@ using Timesheets.Models.Dto;
 
 namespace Timesheets.Controllers
 {
-    [ApiController]
-    [Route("[controller]")]
-    public class UsersController : ControllerBase
+    public class UsersController : TimesheetBaseController
     {
         private readonly IUserManager _userManager;
 
@@ -47,7 +45,7 @@ namespace Timesheets.Controllers
             // Проверка, используется ли уже имя пользователя
             if (id == null) 
             {
-                return BadRequest($"User with Username {user.Username} already registered. Please use another Username");
+                return BadRequest($"User with Username \"{user.Username}\" already registered. Please use another Username");
             }
             return Ok(id);
         }

@@ -44,8 +44,13 @@ namespace Timesheets.Domain.Implementation
             return sheet.Id;
         }
 
-        public async Task Update(Guid id, SheetCreateRequest sheetRequest)
+        public async Task<bool> Update(Guid id, SheetCreateRequest sheetRequest)
         {
+            var isSheetExist = await _sheetRepo.GetItem(id) != null;
+            if (!isSheetExist)
+            {
+                return false;
+            }
             var sheet = new Sheet
             {
                 Id = id,
@@ -57,6 +62,7 @@ namespace Timesheets.Domain.Implementation
             };
             
             await _sheetRepo.Update(sheet);
+            return true;
         }
     }
 }

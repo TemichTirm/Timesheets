@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,6 +10,8 @@ using Timesheets.Data.Implementation;
 using Timesheets.Data.Interfaces;
 using Timesheets.Domain.Implementation;
 using Timesheets.Domain.Interfaces;
+using Timesheets.Infrastructure.Validation;
+using Timesheets.Models.Dto;
 using Timesheets.Models.Dto.Auth;
 
 namespace Timesheets.Infrastructure.Extentions
@@ -53,6 +56,7 @@ namespace Timesheets.Infrastructure.Extentions
             services.AddScoped<IContractManager, ContractManager>();
             services.AddScoped<IEmployeeManager, EmployeeManager>();
             services.AddScoped<ILoginManager, LoginManager>();
+            services.AddScoped<IInvoiceManager, InvoiceManager>();
         }
         public static void ConfigureRepositories(this IServiceCollection services)
         {
@@ -61,6 +65,18 @@ namespace Timesheets.Infrastructure.Extentions
             services.AddScoped<IContractRepo, ContractRepo>();
             services.AddScoped<IEmployeeRepo, EmployeeRepo>();
             services.AddScoped<ITokenRepo, TokenRepo>();
+            services.AddScoped<IInvoiceRepo, InvoiceRepo>();
+        }
+
+        public static void ConfigureValidation(this IServiceCollection services)
+        {
+            services.AddTransient<IValidator<SheetCreateRequest>, SheetCreateRequestValidator>();
+            services.AddTransient<IValidator<UserCreateRequest>, UserCreateRequestValidator>();
+            services.AddTransient<IValidator<ContractCreateRequest>, ContractCreateRequestValidator>();
+            services.AddTransient<IValidator<EmployeeCreateRequest>, EmployeeCreateRequestValidator>();
+            services.AddTransient<IValidator<InvoiceCreateRequest>, InvioceCreateRequestValidator>();
+            services.AddTransient<IValidator<ServiceCreateRequest>, ServiceCreateRequestValidator>();
+            services.AddTransient<IValidator<LoginRequest>, LoginRequestValidator>();
         }
 
         public static void ConfigureSwagger(this IServiceCollection services)

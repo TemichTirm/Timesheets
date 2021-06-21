@@ -9,9 +9,7 @@ using Timesheets.Models.Dto;
 namespace Timesheets.Controllers
 {
     [Authorize]
-    [ApiController]
-    [Route("[controller]")]
-    public class SheetsController: ControllerBase
+    public class SheetsController: TimesheetBaseController
     {
         private readonly ISheetManager _sheetManager;
         private readonly IContractManager _contractManager;
@@ -55,18 +53,20 @@ namespace Timesheets.Controllers
         }
 
         /// <summary> Обновляет запись табеля </summary>
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] SheetCreateRequest sheet)
+        [HttpPut]
+        public async Task<IActionResult> Update([FromQuery] Guid id, [FromBody] SheetCreateRequest sheet)
         {
-            var isAllowedToCreate = await _contractManager.CheckContractIsActive(sheet.ContractId);
-
-            if (isAllowedToCreate !=null && !(bool)isAllowedToCreate)
+            var isContractActive = await _contractManager.CheckContractIsActive(sheet.ContractId);
+            if (isContractActive != null && !(bool)isContractActive)
             {
                 return BadRequest($"Contract {sheet.ContractId} is not active or not found.");
             }
 
-            await _sheetManager.Update(id, sheet);
-
+            var succeed =  await _sheetManager.Update(id, sheet);
+            if (!succeed)
+            {
+                return BadRequest($"Sheet with Id \"{id}\" is not found.");
+            }
             return Ok();
         }
     }

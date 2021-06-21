@@ -36,7 +36,13 @@ namespace Timesheets.Data.Implementation
 
         public async Task Update(Contract item)
         {
-            _context.Contracts.Update(item);
+            var result = await _context.Contracts.FindAsync(item.Id);
+            result.Title = item.Title;
+            result.DateStart = item.DateStart;
+            result.DateEnd = item.DateEnd;
+            result.Description = item.Description;
+            result.IsDeleted = item.IsDeleted;
+            _context.Contracts.Update(result);
             await _context.SaveChangesAsync();
         }        
 

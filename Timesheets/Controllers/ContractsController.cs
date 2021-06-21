@@ -3,25 +3,22 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 using Timesheets.Domain.Interfaces;
-using Timesheets.Models;
 using Timesheets.Models.Dto;
 
 namespace Timesheets.Controllers
 {
-    [Authorize]
-    [ApiController]
-    [Route("[controller]")]
-    public class ContractController : ControllerBase
+    //[Authorize]
+    public class ContractsController : TimesheetBaseController
     {
         private readonly IContractManager _contractManager;
 
-        public ContractController(IContractManager contractManager)
+        public ContractsController(IContractManager contractManager)
         {
             _contractManager = contractManager;
         }
 
         /// <summary> Возвращает информацию о контракте </summary>
-        [Authorize(Roles ="manager, user")]
+        //[Authorize(Roles ="manager, user")]
         [HttpGet("ById")]
         public async Task<IActionResult> GetItem([FromQuery] Guid id)
         {
@@ -34,7 +31,7 @@ namespace Timesheets.Controllers
         }
 
         /// <summary> Возвращает информацию обо всех контрактах </summary>
-        [Authorize(Roles ="manager, user")]
+        //[Authorize(Roles ="manager, user")]
         [HttpGet]
         public async Task<IActionResult> GetItems()
         {
@@ -43,7 +40,7 @@ namespace Timesheets.Controllers
         }
 
         /// <summary> Создает новый контракт</summary>
-        [Authorize(Roles = "manager")]
+        //[Authorize(Roles = "manager")]
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] ContractCreateRequest contractRequest)
         {
@@ -53,16 +50,15 @@ namespace Timesheets.Controllers
         }
 
         /// <summary> Обновляет данные контракта </summary>
-        [Authorize(Roles = "manager")]
+        //[Authorize(Roles = "manager")]
         [HttpPut]
-        public async Task<IActionResult> Update([FromBody] Contract contract)
+        public async Task<IActionResult> Update([FromQuery] Guid id, [FromBody] ContractCreateRequest contractRequest)
         {
-            var isContractExist = await _contractManager.CheckContractExist(contract.Id);
-            if (!isContractExist)
+            var succeed = await _contractManager.Update(id, contractRequest);
+            if (!succeed)
             {
-                return NoContent();
+                return BadRequest($"Contract with Id \"{id}\" is not found.");
             }
-            await _contractManager.Update(contract);
             return Ok();
         }
     }

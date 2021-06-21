@@ -48,5 +48,14 @@ namespace Timesheets.Data.Implementation
             _context.Sheets.Update(result);
             await _context.SaveChangesAsync();
         }
+
+        public async Task<IEnumerable<Sheet>> GetItemsForInvoice(Guid contractId, DateTime dateStart, DateTime dateEnd)
+        {
+            var sheets = await _context.Sheets.Where(x => x.ContractId == contractId)
+                .Where(x => x.Date >= dateStart && x.Date <= dateEnd)
+                .Where(x => x.InvoiceId == null)
+                .ToListAsync();
+            return sheets;
+        }
     }
 }

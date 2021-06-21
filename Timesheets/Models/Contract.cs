@@ -14,5 +14,6 @@ namespace Timesheets.Models
         public bool IsDeleted { get; set; }
         
         public ICollection<Sheet> Sheets { get; set; }
+        public ICollection<Invoice> Invoices { get; set; }
     }
 }

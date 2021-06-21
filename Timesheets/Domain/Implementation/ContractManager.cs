@@ -17,11 +17,6 @@ namespace Timesheets.Domain.Implementation
             _contractRepo = contractRepo;
         }
 
-        public async Task<bool> CheckContractExist(Guid id)
-        {
-            return await _contractRepo.GetItem(id) != null;
-        }
-
         public async Task<bool?> CheckContractIsActive(Guid id)
         {
             return await _contractRepo.CheckContractIsActive(id);
@@ -52,9 +47,25 @@ namespace Timesheets.Domain.Implementation
             return await _contractRepo.GetItems();
         }
 
-        public Task Update(Contract contract)
+        public async Task<bool> Update(Guid id, ContractCreateRequest contractRequest)
         {
-            throw new NotImplementedException();
+            var contract = await _contractRepo.GetItem(id);
+            if (contract == null)
+            {
+                return false;
+            }
+            var newContract = new Contract
+            {
+                Id = id,
+                Title = contractRequest.Title,
+                DateStart = contractRequest.DateStart,
+                DateEnd = contractRequest.DateEnd,
+                Description = contractRequest.Description,
+                IsDeleted = contract.IsDeleted
+            };
+
+            await _contractRepo.Update(newContract);
+            return true;
         }
     }
 }

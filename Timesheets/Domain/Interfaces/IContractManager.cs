@@ -12,7 +12,6 @@ namespace Timesheets.Domain.Interfaces
         Task<Contract> GetItem(Guid id);
         Task<IEnumerable<Contract>> GetItems();
         Task<Guid> Create(ContractCreateRequest contractRequest);
-        Task<bool> CheckContractExist(Guid id);
-        Task Update(Contract contract);
+        Task<bool> Update(Guid id, ContractCreateRequest contractRequest);
     }
 }

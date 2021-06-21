@@ -12,6 +12,6 @@ namespace Timesheets.Domain.Interfaces
         Task<Sheet> GetItem(Guid id);
         Task<IEnumerable<Sheet>> GetItems();
         Task<Guid> Create(SheetCreateRequest sheet);
-        Task Update(Guid id, SheetCreateRequest sheetRequest);
+        Task<bool> Update(Guid id, SheetCreateRequest sheetRequest);
     }
 }

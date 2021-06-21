@@ -9,6 +9,14 @@ namespace Timesheets.Data.Configurations
         public void Configure(EntityTypeBuilder<Service> builder)
         {
             builder.ToTable("services");
+
+            builder.Property(x => x.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("Id");
+
+            builder.Property(x => x.Name)
+                .ValueGeneratedNever()
+                .HasColumnName("Name");
         }
     }
 }

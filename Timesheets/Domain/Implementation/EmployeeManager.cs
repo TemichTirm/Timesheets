@@ -58,20 +58,23 @@ namespace Timesheets.Domain.Implementation
             return await _employeeRepo.GetItems();
         }
 
-        public async Task Update(Guid id, EmployeeCreateRequest employeeRequest)
+        public async Task<bool> Update(Guid id, EmployeeCreateRequest employeeRequest)
         {
-            var employee = new Employee
+            var employee = await _employeeRepo.GetItem(id);
+            if (employee == null)
+            {
+                return false;
+            }
+
+            var newEmployee = new Employee
             {
                 Id = id,
                 Name = employeeRequest.Name,
                 UserId = employeeRequest.UserId,
-                IsDeleted = employeeRequest.IsDeleted
+                IsDeleted = employee.IsDeleted
             };
-            await _employeeRepo.Update(employee);
-        }
-        public async Task<bool> CheckEmployeeExist(Guid id)
-        {
-            return await _employeeRepo.GetItem(id)!= null;
+            await _employeeRepo.Update(newEmployee);
+            return true;
         }
     }
 }
