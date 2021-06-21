@@ -12,6 +12,8 @@ namespace Timesheets.Data
         public DbSet<Service> Services { get; set; }
         public DbSet<Sheet> Sheets { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<RefreshToken> Tokens { get; set; }
+
 
         public TimesheetDbContext(DbContextOptions<TimesheetDbContext> options):base(options)
         {
@@ -26,6 +28,7 @@ namespace Timesheets.Data
             modelBuilder.ApplyConfiguration(new ServiceConfiguration());
             modelBuilder.ApplyConfiguration(new SheetConfiguration());
             modelBuilder.ApplyConfiguration(new UserConfiguration());
+            modelBuilder.ApplyConfiguration(new TokenConfiguration());
         }
     }
 }

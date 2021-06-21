@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Timesheets.Data.Interfaces;
@@ -21,14 +22,16 @@ namespace Timesheets.Data.Implementation
             return result;
         }
 
-        public Task<IEnumerable<Contract>> GetItems()
+        public async Task<IEnumerable<Contract>> GetItems()
         {
-            throw new NotImplementedException();
+            var result = await _context.Contracts.ToListAsync();
+            return result;
         }
 
-        public Task Add(Contract item)
+        public async Task Add(Contract item)
         {
-            throw new NotImplementedException();
+            await _context.Contracts.AddAsync(item);
+            await _context.SaveChangesAsync();
         }
 
         public async Task Update(Contract item)

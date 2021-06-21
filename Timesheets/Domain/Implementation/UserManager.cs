@@ -55,6 +55,10 @@ namespace Timesheets.Domain.Implementation
         {
             return await _userRepo.GetItem(id) != null;
         }
+        public async Task<bool> CheckUserExist(string userName)
+        {
+            return await _userRepo.CheckUserExist(userName);
+        }
 
         public async Task<User> GetUser(LoginRequest request)
         {
