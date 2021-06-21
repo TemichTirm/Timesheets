@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Timesheets.Data.Interfaces;
@@ -8,37 +9,46 @@ namespace Timesheets.Data.Implementation
 {
     public class ContractRepo:IContractRepo
     {
-        private readonly TimesheetDbContext _dbContext;
+        private readonly TimesheetDbContext _context;
 
-        public ContractRepo(TimesheetDbContext dbContext)
+        public ContractRepo(TimesheetDbContext context)
         {
-            _dbContext = dbContext;
+            _context = context;
         }
 
-        public Task<Contract> GetItem(Guid id)
+        public async Task<Contract> GetItem(Guid id)
         {
-            throw new NotImplementedException();
+            var result = await _context.Contracts.FindAsync(id);
+            return result;
         }
 
-        public Task<IEnumerable<Contract>> GetItems()
+        public async Task<IEnumerable<Contract>> GetItems()
         {
-            throw new NotImplementedException();
+            var result = await _context.Contracts.ToListAsync();
+            return result;
         }
 
-        public Task Add(Contract item)
+        public async Task Add(Contract item)
         {
-            throw new NotImplementedException();
+            await _context.Contracts.AddAsync(item);
+            await _context.SaveChangesAsync();
         }
 
         public async Task Update(Contract item)
         {
-            _dbContext.Contracts.Update(item);
-            await _dbContext.SaveChangesAsync();
+            var result = await _context.Contracts.FindAsync(item.Id);
+            result.Title = item.Title;
+            result.DateStart = item.DateStart;
+            result.DateEnd = item.DateEnd;
+            result.Description = item.Description;
+            result.IsDeleted = item.IsDeleted;
+            _context.Contracts.Update(result);
+            await _context.SaveChangesAsync();
         }        
 
         public async Task<bool?> CheckContractIsActive(Guid id)
         {
-            var contract = await _dbContext.Contracts.FindAsync(id);
+            var contract = await _context.Contracts.FindAsync(id);
             var now = DateTime.Now;
             var isActive = now <= contract?.DateEnd && now >= contract?.DateStart;
 

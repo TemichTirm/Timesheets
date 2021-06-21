@@ -6,9 +6,7 @@ using Timesheets.Models.Dto;
 
 namespace Timesheets.Controllers
 {
-    [ApiController]
-    [Route("[controller]")]
-    public class EmployeesController : ControllerBase
+    public class EmployeesController : TimesheetBaseController
     {
         private readonly IEmployeeManager _employeeManager;
 
@@ -35,7 +33,7 @@ namespace Timesheets.Controllers
 
         /// <summary> Создает нового сотрудника </summary>
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] EmployeeRequest employeeRequest)
+        public async Task<IActionResult> Create([FromBody] EmployeeCreateRequest employeeRequest)
         {
             var id = await _employeeManager.Create(employeeRequest);
             if (id != null)
@@ -50,14 +48,14 @@ namespace Timesheets.Controllers
 
         /// <summary> Обновляет данные сотрудника </summary>
         [HttpPut]
-        public async Task<IActionResult> Update([FromQuery] Guid id, [FromBody] EmployeeRequest employeeRequest)
+        public async Task<IActionResult> Update([FromQuery] Guid id, [FromBody] EmployeeCreateRequest employeeRequest)
         {
-            var isEmployeeExist = await _employeeManager.CheckEmployeeExist(id);
-            if (!isEmployeeExist)
+
+            var succeed = await _employeeManager.Update(id, employeeRequest);
+            if (!succeed)
             {
-                return BadRequest($"Employee with id {id} does not exists. It couldn't been updated.");
+                return BadRequest($"Employee with Id \"{id}\" is not found.");
             }
-            await _employeeManager.Update(id, employeeRequest);
             return Ok();
         }
 

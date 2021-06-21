@@ -10,8 +10,8 @@ using Timesheets.Data;
 namespace Timesheets.Migrations
 {
     [DbContext(typeof(TimesheetDbContext))]
-    [Migration("20210525164635_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20210530175121_InitialStart")]
+    partial class InitialStart
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -172,6 +172,14 @@ namespace Timesheets.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid")
                         .HasColumnName("Id");
+
+                    b.Property<byte[]>("PasswordHash")
+                        .HasColumnType("bytea")
+                        .HasColumnName("Password");
+
+                    b.Property<string>("Role")
+                        .HasColumnType("text")
+                        .HasColumnName("Role");
 
                     b.Property<string>("Username")
                         .HasColumnType("text")

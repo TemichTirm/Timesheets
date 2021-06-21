@@ -40,17 +40,22 @@ namespace Timesheets.Data.Implementation
             
             var result = await _context.Sheets.FindAsync(item.Id);
             result.Amount = item.Amount;
-            result.Contract = item.Contract;
-            result.ContractId = item.ContractId;
             result.Date = item.Date;
-            result.Employee = item.Employee;
+            result.ContractId = item.ContractId;
             result.EmployeeId = item.EmployeeId;
-            result.Invoice = item.Invoice;
             result.InvoiceId = item.InvoiceId;
-            result.Service = item.Service;
             result.ServiceId = item.ServiceId;
             _context.Sheets.Update(result);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<Sheet>> GetItemsForInvoice(Guid contractId, DateTime dateStart, DateTime dateEnd)
+        {
+            var sheets = await _context.Sheets.Where(x => x.ContractId == contractId)
+                .Where(x => x.Date >= dateStart && x.Date <= dateEnd)
+                .Where(x => x.InvoiceId == null)
+                .ToListAsync();
+            return sheets;
         }
     }
 }

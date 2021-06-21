@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Timesheets.Domain.Interfaces;
 using Timesheets.Models;
@@ -7,9 +8,8 @@ using Timesheets.Models.Dto;
 
 namespace Timesheets.Controllers
 {
-    [ApiController]
-    [Route("[controller]")]
-    public class SheetsController: ControllerBase
+    [Authorize]
+    public class SheetsController: TimesheetBaseController
     {
         private readonly ISheetManager _sheetManager;
         private readonly IContractManager _contractManager;
@@ -29,6 +29,7 @@ namespace Timesheets.Controllers
         }
         
         /// <summary> Возвращает все записи табеля </summary>
+        [Authorize(Roles = "user, admin")]
         [HttpGet]
         public async Task<IActionResult> GetItems()
         {
@@ -38,7 +39,7 @@ namespace Timesheets.Controllers
 
         /// <summary> Создает новую запись табеля </summary>
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] SheetRequest sheet)
+        public async Task<IActionResult> Create([FromBody] SheetCreateRequest sheet)
         {
             var isAllowedToCreate = await _contractManager.CheckContractIsActive(sheet.ContractId);
 
@@ -52,18 +53,20 @@ namespace Timesheets.Controllers
         }
 
         /// <summary> Обновляет запись табеля </summary>
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] SheetRequest sheet)
+        [HttpPut]
+        public async Task<IActionResult> Update([FromQuery] Guid id, [FromBody] SheetCreateRequest sheet)
         {
-            var isAllowedToCreate = await _contractManager.CheckContractIsActive(sheet.ContractId);
-
-            if (isAllowedToCreate !=null && !(bool)isAllowedToCreate)
+            var isContractActive = await _contractManager.CheckContractIsActive(sheet.ContractId);
+            if (isContractActive != null && !(bool)isContractActive)
             {
                 return BadRequest($"Contract {sheet.ContractId} is not active or not found.");
             }
 
-            await _sheetManager.Update(id, sheet);
-
+            var succeed =  await _sheetManager.Update(id, sheet);
+            if (!succeed)
+            {
+                return BadRequest($"Sheet with Id \"{id}\" is not found.");
+            }
             return Ok();
         }
     }

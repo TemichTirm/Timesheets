@@ -18,6 +18,14 @@ namespace Timesheets.Data.Configurations
                 .ValueGeneratedNever()
                 .HasColumnName("Username");
 
+            builder.Property(x => x.PasswordHash)
+                .ValueGeneratedNever()
+                .HasColumnName("Password");
+
+            builder.Property(x => x.Role)
+                .ValueGeneratedNever()
+                .HasColumnName("Role");
+
         }
     }
 }

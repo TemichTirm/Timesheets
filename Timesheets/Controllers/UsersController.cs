@@ -2,12 +2,12 @@
 using System;
 using System.Threading.Tasks;
 using Timesheets.Domain.Interfaces;
+using Timesheets.Models;
+using Timesheets.Models.Dto;
 
 namespace Timesheets.Controllers
 {
-    [ApiController]
-    [Route("[controller]")]
-    public class UsersController : ControllerBase
+    public class UsersController : TimesheetBaseController
     {
         private readonly IUserManager _userManager;
 
@@ -21,7 +21,10 @@ namespace Timesheets.Controllers
         public async Task<IActionResult> GetItem([FromQuery] Guid id)
         {
             var result = await _userManager.GetItem(id);
-
+            if (result == null)
+            {
+                return NoContent();
+            }
             return Ok(result);
         }
 
@@ -35,22 +38,28 @@ namespace Timesheets.Controllers
 
         /// <summary> Создает нового пользователя </summary>
         [HttpPost]
-        public async Task<IActionResult> Create([FromQuery] string userName)
-        {            
-            var id = await _userManager.Create(userName);
+        public async Task<IActionResult> Create([FromBody] UserCreateRequest user)
+        {
+            
+            var id = await _userManager.Create(user);
+            // Проверка, используется ли уже имя пользователя
+            if (id == null) 
+            {
+                return BadRequest($"User with Username \"{user.Username}\" already registered. Please use another Username");
+            }
             return Ok(id);
         }
 
-        /// <summary> Обновляет имя пользователя </summary>
+        /// <summary> Обновляет данные пользователя </summary>
         [HttpPut]
-        public async Task<IActionResult> Update([FromQuery] Guid id, [FromQuery] string userName)
+        public async Task<IActionResult> Update([FromBody] User user)
         {
-            var isUserNameExist = await _userManager.CheckUserExist(id);
-            if (!isUserNameExist)
+            var isUserExist = await _userManager.CheckUserExist(user.Id);
+            if (!isUserExist)
             {
-                return BadRequest($"User with id {id} does not exists. It couldn't been updated.");
+                return NoContent();
             }
-            await _userManager.Update(id, userName);
+            await _userManager.Update(user);
             return Ok();
         }
     }

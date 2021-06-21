@@ -17,8 +17,9 @@ namespace Timesheets.Domain.Implementation
             _employeeRepo = employeeRepo;
             _userRepo = userRepo;
         }
-        public async Task<Guid?> Create(EmployeeRequest employeeRequest)
+        public async Task<Guid?> Create(EmployeeCreateRequest employeeRequest)
         {
+            // Проверка есть ли User с таким Id
             var isUserExist = await _userRepo.CheckUserExist(null, employeeRequest.UserId);
             if (!isUserExist)
             {
@@ -26,6 +27,7 @@ namespace Timesheets.Domain.Implementation
             }
             else 
             {
+                // Проверка сопоставлен ли такой UserId с другим сотрудником
                 var employees = await _employeeRepo.GetItems();
                 foreach (var employee in employees)
                 {
@@ -56,20 +58,23 @@ namespace Timesheets.Domain.Implementation
             return await _employeeRepo.GetItems();
         }
 
-        public async Task Update(Guid id, EmployeeRequest employeeRequest)
+        public async Task<bool> Update(Guid id, EmployeeCreateRequest employeeRequest)
         {
-            var employee = new Employee
+            var employee = await _employeeRepo.GetItem(id);
+            if (employee == null)
+            {
+                return false;
+            }
+
+            var newEmployee = new Employee
             {
                 Id = id,
                 Name = employeeRequest.Name,
                 UserId = employeeRequest.UserId,
-                IsDeleted = employeeRequest.IsDeleted
+                IsDeleted = employee.IsDeleted
             };
-            await _employeeRepo.Update(employee);
-        }
-        public async Task<bool> CheckEmployeeExist(Guid id)
-        {
-            return await _employeeRepo.GetItem(id)!= null;
+            await _employeeRepo.Update(newEmployee);
+            return true;
         }
     }
 }

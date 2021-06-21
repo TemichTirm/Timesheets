@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Timesheets.Data.Interfaces;
@@ -54,6 +55,13 @@ namespace Timesheets.Data.Implementation
                 result = await _context.Users.AsQueryable().FirstOrDefaultAsync(u => u.Username == userName);
             }
             return result != null;
+        }
+
+        public async Task<User> GetByLoginAndPasswordHash(string login, byte[] passwordHash)
+        {
+            return await _context.Users
+                .Where(u => u.Username == login && u.PasswordHash == passwordHash)
+                .FirstOrDefaultAsync();
         }
     }
 }
